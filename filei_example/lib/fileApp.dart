@@ -12,20 +12,36 @@ class FileApp extends StatefulWidget {
 
 class _FileAppState extends State<FileApp> {
   int _count = 0;
+  List<String> itemList = List.empty(growable: true);
+  TextEditingController controller = TextEditingController();
+
+  @override
+  void initState(){
+    super.initState();
+    readCountFile();
+    initData();
+  }
+
+  void initData() async{
+    var result = await readListFile();
+    setState((){
+      itemList.addAll(result);
+    });
+  }
 
   Future<List<String>> readListFile() async {
-    List<String> itemList = new List.empty();
+    List<String> itemList = new List.empty(growable: true);
     var key = 'first';
     SharedPreferences pref = await SharedPreferences.getInstance();
     bool? firstCheck = pref.getBool(key);
     var dir = await getApplicationDocumentsDirectory();
-    bool fileExist = await File(dir.path + '/fruit/txt').exists();
+    bool fileExist = await File(dir.path + '/fruit.txt').exists();
 
     if (firstCheck == null || firstCheck == false || fileExist == false) {
       pref.setBool(key, true);
       var file =
           await DefaultAssetBundle.of(context).loadString('repo/fruit.txt');
-      File(dir.path + '/fluit.txt').writeAsStringSync(file);
+      File(dir.path + '/fruit.txt').writeAsStringSync(file);
       var array = file.split('\n');
       for (var item in array){
         print(item);
@@ -33,7 +49,7 @@ class _FileAppState extends State<FileApp> {
       }
       return itemList;
     }else{
-      var file = await File(dir.path+'fruit.txt').readAsString();
+      var file = await File(dir.path+'/fruit.txt').readAsString();
       var array = file.split('\n');
       for (var item in array){
         print(item);
@@ -43,23 +59,40 @@ class _FileAppState extends State<FileApp> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    readCountFile();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('File Example'),
+        title: Text('File Example $_count'),
       ),
       body: Container(
         child: Center(
-          child: Text(
-            '$_count',
-            style: TextStyle(fontSize: 40),
+          child: Column(
+            children: <Widget>[
+              TextField(
+                controller: controller,
+                keyboardType: TextInputType.text,
+              ),
+              Expanded(
+                child: ListView.builder(itemBuilder: (context, index){
+                  return Card(
+                    child: Center(
+                      child: TextButton(
+                        child: Text(
+                          itemList[index],
+                          style: TextStyle(fontSize: 30, color: Colors.pink),                                                  ),
+                        onPressed: (){
+                          print(itemList[index]);
+                        },
+                      ),
+                    ),
+                  );
+                },
+                itemCount: itemList.length,
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -67,25 +100,34 @@ class _FileAppState extends State<FileApp> {
         onPressed: () {
           setState(() {
             _count++;
-          });
+            writeFruit(controller.value.text);
+            setState((){
+              itemList.add(controller.value.text);
+            });
+          },
+          );
           writeCountFile(_count);
         },
-        child: Icon(Icons.account_balance_rounded),
+        child: Icon(Icons.add_circle_outline),
       ),
     );
   }
 
+  void writeFruit(String fruit) async{
+    var dir = await getApplicationDocumentsDirectory();
+    var file = await File(dir.path+'/fruit.txt').readAsString();
+    file = file +'\n'+fruit;
+    File(dir.path+'/fruit.txt').writeAsStringSync(file);
+  }
   void writeCountFile(int count) async {
     var dir = await getApplicationDocumentsDirectory();
     File(dir.path + '/count.txt').writeAsStringSync(count.toString());
-    print(dir);
   }
 
   void readCountFile() async {
     try {
       var dir = await getApplicationDocumentsDirectory();
       var file = await File(dir.path + '/count.txt').readAsString();
-      print(file);
       setState(() {
         _count = int.parse(file);
       });
