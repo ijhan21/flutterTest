@@ -1,10 +1,6 @@
-import 'package:animation_example/intro.dart';
-import 'package:animation_example/saturnLoading.dart';
-import 'package:animation_example/sliverPage.dart';
 import 'package:flutter/material.dart';
 import 'package:animation_example/people.dart';
 import 'package:animation_example/secondPage.dart';
-
 void main() {
   runApp(const MyApp());
 }
@@ -29,8 +25,7 @@ class MyApp extends StatelessWidget {
         // is not restarted.
         primarySwatch: Colors.blue,
       ),
-      // home: AnimationApp(),
-      home: IntroPage(),
+      home: AnimationApp(),
     );
   }
 }
@@ -68,16 +63,12 @@ class _AnimationAppState extends State<AnimationApp> {
       body: Container(
         child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               AnimatedOpacity(
                 opacity: _opacity,
                 duration: Duration(seconds: 1),
                 child: SizedBox(
-                  height: 200,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
                       SizedBox(
                         width: 100,
@@ -87,37 +78,40 @@ class _AnimationAppState extends State<AnimationApp> {
                         duration: Duration(seconds: 2),
                         curve: Curves.bounceIn,
                         color: Colors.amber,
-                        width: 50,
-                        height: peoples[current].height,
                         child: Text(
                           '키 ${peoples[current].height}',
                           textAlign: TextAlign.center,
                         ),
+                        width: 50,
+                        height: peoples[current].height,
                       ),
                       AnimatedContainer(
                         duration: Duration(seconds: 2),
                         curve: Curves.easeInCubic,
                         color: weightColor,
-                        width: 50,
-                        height: peoples[current].weight,
                         child: Text(
                           '몸무게 ${peoples[current].weight}',
                           textAlign: TextAlign.center,
                         ),
+                        width: 50,
+                        height: peoples[current].weight,
                       ),
                       AnimatedContainer(
                         duration: Duration(seconds: 2),
                         curve: Curves.linear,
                         color: Colors.pinkAccent,
-                        width: 50,
-                        height: peoples[current].bmi,
                         child: Text(
                           'bmi ${peoples[current].bmi}',
                           textAlign: TextAlign.center,
                         ),
+                        width: 50,
+                        height: peoples[current].bmi,
                       ),
                     ],
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.end,
                   ),
+                  height: 200,
                 ),
               ),
               ElevatedButton(
@@ -158,36 +152,29 @@ class _AnimationAppState extends State<AnimationApp> {
                 child: SizedBox(
                   width: 200,
                   child: Row(
-                    children: const [
+                    children: [
                       Hero(tag: 'detail', child: Icon(Icons.add)),
                       Text('이동하기')
                     ],
                   ),
                 ),
-              ),
-              ElevatedButton(
-                onPressed: () {
-                  Navigator.of(context).push(
-                      MaterialPageRoute(builder: (context) => SliverPage()));
-                },
-                child:
-                      Text('페이지 이동')
-                                  )
+              )
             ],
+            mainAxisAlignment: MainAxisAlignment.center,
           ),
         ),
       ),
     );
   }
 
-  void _changeWeightColor(double weight){
-    if (weight < 40){
+  void _changeWeightColor(double weight) {
+    if (weight < 40) {
       weightColor = Colors.blueAccent;
-    }else if(weight<60){
+    } else if (weight < 60) {
       weightColor = Colors.indigo;
-    }else if(weight < 80){
+    } else if (weight < 80) {
       weightColor = Colors.orange;
-    }else{
+    } else {
       weightColor = Colors.red;
     }
   }
