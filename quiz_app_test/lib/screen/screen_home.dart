@@ -50,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen> {
               '퀴즈를 풀기 전 안내사항입니다.\n꼼꼼히 읽고 퀴즈 풀기를 눌러주세요.',
               textAlign: TextAlign.center,
             ),
-            Padding(padding: EdgeInsets.all(width * 0.048)),
+            Padding(padding: EdgeInsets.all(width * 0.025)),
             _buildStep(width, '1.랜덤으로 나오는 퀴즈 3개를 풀어보세요.'),
             _buildStep(width, '2.문제를 잘 읽고 정답을 고른 뒤\n 다음 문제버튼을 눌러주세요.'),
             _buildStep(width, '3.만점을 향해 도전해 보세요!'),
